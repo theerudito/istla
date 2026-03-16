@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -15,15 +16,36 @@ import (
 
 func main() {
 
-	// CREAR INSTANCIA DE FIBER
-	app := fiber.New()
-
 	// LEER LAS VARIABLES DE ENTORNO
 	err := godotenv.Load()
-
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
+
+	// CREAR INSTANCIA DE FIBER
+	app := fiber.New(fiber.Config{
+		BodyLimit: 2 * 1024 * 1024, // 2MB
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			code := fiber.StatusInternalServerError
+			var e *fiber.Error
+			if errors.As(err, &e) {
+				code = e.Code
+			}
+
+			switch code {
+
+			case fiber.StatusRequestEntityTooLarge:
+				return c.Status(code).JSON(fiber.Map{
+					"error": "El archivo excede el tamaño máximo permitido (2MB)",
+				})
+
+			default:
+				return c.Status(code).JSON(fiber.Map{
+					"error": err.Error(),
+				})
+			}
+		},
+	})
 
 	// CREAR LAS CARPETAS
 	er := helpers.CreateFolder()
