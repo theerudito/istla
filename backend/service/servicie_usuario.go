@@ -6,6 +6,6 @@ import (
 )
 
 type IUser interface {
-	Login(obj dto.UsuarioLoginDTO) dto.APIRespuesta[*dto.APIRespuestaLogin]
-	Register(obj entities.Usuario) dto.APIRespuesta[*dto.APIRespuestaRegister]
+	Login(obj dto.UsuarioLoginDTO) *dto.APIRespuestaAcciones
+	Register(obj entities.Usuario) *dto.APIRespuestaAcciones
 }

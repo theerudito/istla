@@ -11,10 +11,11 @@ CREATE TABLE
     usuarios
 (
     id_usuario INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    w   VARCHAR(13) UNIQUE,
+    identificacion   VARCHAR(13) UNIQUE,
     nombres          VARCHAR(50),
     apellidos        VARCHAR(50),
     email            VARCHAR(150),
+    password         VARCHAR(150),
     id_perfil        INT NOT NULL,
 
     FOREIGN KEY (id_perfil) REFERENCES perfiles (id_perfil)
