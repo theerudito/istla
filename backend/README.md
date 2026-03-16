@@ -6,3 +6,7 @@ PasswordBD=
 NameDB=
 PortServer=
 Secret_Key=
+Source_Path=
+IMAGEN=
+PDF=
+Url=
