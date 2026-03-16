@@ -4,4 +4,7 @@
     <file url="file://$PROJECT_DIR$/backend/ddl.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/backend/dml.sql" dialect="PostgreSQL" />
   </component>
+  <component name="SqlResolveMappings">
+    <file url="file://$PROJECT_DIR$/backend/repositories/repositoriePerfil.go" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;name&quot;:{     &quot;@qname&quot;:&quot;39a5c82f-7b6a-40a0-8fb9-211bf888460e&quot;    },    &quot;group&quot;:{     &quot;@kind&quot;:&quot;database&quot;,     &quot;node&quot;:{      &quot;name&quot;:{       &quot;@qname&quot;:&quot;istla&quot;      },      &quot;group&quot;:{       &quot;@kind&quot;:&quot;schema&quot;,       &quot;node&quot;:{        &quot;name&quot;:{         &quot;@qname&quot;:&quot;public&quot;        }       }      }     }    }   }  } }}" />
+  </component>
 </project>

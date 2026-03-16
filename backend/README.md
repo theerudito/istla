@@ -5,3 +5,4 @@ UserDB=
 PasswordBD=
 NameDB=
 PortServer=
+Secret_Key=

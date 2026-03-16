@@ -16,7 +16,7 @@ func NewRepositoriePostUser(db *sql.DB) service.IPostUsuario {
 	return &repositoriePostUser{db: db}
 }
 
-func (r repositoriePostUser) Get_PostUser_By_UserId(id uint) dto.APIRespuesta[[]*dto.APIRespuestaRegister] {
+func (r repositoriePostUser) Get_PostUser_By_UserId(id uint) dto.APIRespuesta[[]*dto.PostUsuarioDTO] {
 	//TODO implement me
 	panic("implement me")
 }

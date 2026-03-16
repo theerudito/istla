@@ -6,7 +6,7 @@ import (
 )
 
 type IPostUsuario interface {
-	Get_PostUser_By_UserId(id uint) dto.APIRespuesta[[]*dto.APIRespuestaRegister]
+	Get_PostUser_By_UserId(id uint) dto.APIRespuesta[[]*dto.PostUsuarioDTO]
 	Create_PostUser(obj entities.PostUsuario) *dto.APIRespuestaAcciones
 	Update_PostUser(obj entities.PostUsuario) *dto.APIRespuestaAcciones
 	Delete_PostUser(id uint) *dto.APIRespuestaAcciones

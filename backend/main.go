@@ -47,15 +47,18 @@ func main() {
 	// INYECTAR REPOSITORIOS
 	repositorieUser := repositories.NewRepositorieUser(conn)
 	repositorieUserRegister := repositories.NewRepositoriePostUser(conn)
+	repositorieProfile := repositories.NewRepositoriePerfil(conn)
 
 	// INYECTAR CONTROLADORES
 	handlerUser := handlers.NewHandlerUser(repositorieUser)
 	handlerUseregister := handlers.NewHandlerPostUser(repositorieUserRegister)
+	handlerProfile := handlers.NewHandlerPerfil(repositorieProfile)
 
 	// REGISTRAR LOS CONTROLADORES
 	controllers := &handlers.Handlers{
 		User:         handlerUser,
 		UserRegister: handlerUseregister,
+		Profile:      handlerProfile,
 	}
 
 	router.SetupRoutes(app, controllers)

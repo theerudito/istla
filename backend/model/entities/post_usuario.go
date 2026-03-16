@@ -6,7 +6,7 @@ type PostUsuario struct {
 	PostUserId          uint      `json:"post_user_id"`
 	Descripcion         string    `json:"descripcion"`
 	UsuarioId           string    `json:"usuario_id"`
-	StorageId           string    `json:"id_storage"`
+	File                string    `json:"file"`
 	UsuarioCreacion     string    `json:"usuario_creacion"`
 	UsuarioModificacion string    `json:"usuario_modificacion"`
 	FechaCreacion       time.Time `json:"fecha_creacion"`
