@@ -1,6 +1,6 @@
 import axios from "axios";
 import {url_base} from "./UrlBase.ts";
-import type {PostUsuario, PostUsuarioDTO} from "../models/post-usuario.ts";
+import type {PostUsuarioDTO} from "../models/post-usuario.ts";
 import type {ApiResponse} from "../models/ApiResponse.ts";
 
 export const GET_UserPost = async (id:number) => {
@@ -16,9 +16,13 @@ export const GET_UserPost = async (id:number) => {
     }
 };
 
-export const POST_UserPost = async (obj: PostUsuario) => {
+export const POST_UserPost = async (obj: FormData) => {
     try {
-        const response = await axios.post(`${url_base}/post`, obj);
+        const response = await axios.post(`${url_base}/post`, obj, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
         return { success: true, data: response.data };
     } catch (error: unknown) {
         let message = "Error desconocido";
@@ -29,9 +33,13 @@ export const POST_UserPost = async (obj: PostUsuario) => {
     }
 };
 
-export const PUT_UserPost = async (obj: PostUsuario) => {
+export const PUT_UserPost = async (obj: FormData) => {
     try {
-        const response = await axios.put(`${url_base}/post`, obj);
+        const response = await axios.put(`${url_base}/post`, obj, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
         return { success: true, data: response.data };
     } catch (error: unknown) {
         let message = "Error desconocido";

@@ -21,16 +21,21 @@ func NewRepositorieUser(db *sql.DB) service.IUser {
 func (r repositorieUser) Login(obj dto.UsuarioLoginDTO) *dto.APIRespuestaAcciones {
 
 	var (
-		err        error
-		passwordDB string
-		token      string
+		err                            error
+		passwordDB, nombres, apellidos string
+		token                          string
+		id_usuario                     int
 	)
 
 	err = r.db.QueryRow(`
-		SELECT password
+		SELECT 
+		    id_usuario,
+		    password, 
+			nombres,
+		    apellidos
 		FROM usuarios
 		WHERE identificacion = $1`,
-		obj.Identificacion).Scan(&passwordDB)
+		obj.Identificacion).Scan(&id_usuario, &passwordDB, &nombres, &apellidos)
 
 	if err != nil {
 		return &dto.APIRespuestaAcciones{Codigo: 404, Mensaje: "usuario no existe"}
@@ -46,7 +51,7 @@ func (r repositorieUser) Login(obj dto.UsuarioLoginDTO) *dto.APIRespuestaAccione
 		return &dto.APIRespuestaAcciones{Codigo: 401, Mensaje: "contraseña incorrecta"}
 	}
 
-	token, err = helpers.GenerateToken(obj.Identificacion)
+	token, err = helpers.GenerateToken(dto.UsuarJWT{UsuarioId: id_usuario, Nombres: helpers.ObtenerPalabra(nombres, apellidos)})
 	if err != nil {
 		_ = helpers.InsertLogsError(r.db, "usuario", "error generando token "+err.Error())
 		return &dto.APIRespuestaAcciones{Codigo: 500, Mensaje: "error generando token"}
@@ -129,7 +134,7 @@ func (r repositorieUser) Register(obj entities.Usuario) *dto.APIRespuestaAccione
 		return &dto.APIRespuestaAcciones{Codigo: 500, Mensaje: "error insertando auditoria"}
 	}
 
-	token, err = helpers.GenerateToken(obj.Identificacion)
+	token, err = helpers.GenerateToken(dto.UsuarJWT{UsuarioId: usuarioId, Nombres: helpers.ObtenerPalabra(strings.ToUpper(obj.Nombres), strings.ToUpper(obj.Apellidos))})
 	if err != nil {
 		_ = helpers.InsertLogsError(r.db, "usuario", "error generando token "+err.Error())
 		return &dto.APIRespuestaAcciones{Codigo: 500, Mensaje: "error generando token"}

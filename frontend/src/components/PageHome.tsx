@@ -4,12 +4,15 @@ import {useEffect, useState} from "react";
 import {useUserPost} from "../store/usePostUser.ts";
 import {useAuth} from "../store/useAuth.ts";
 import {useModalPost} from "../store/useModal.ts";
+import {ObtenerToken} from "../helpers/JWTDecore.ts";
 
 export default function PagueHome() {
     const {Logout} = useAuth((state) => state);
     const {openModal} = useModalPost((state) => state);
     const {list_post_user, GetPostByUser, GetOne, DeletePost} = useUserPost((state) => state);
     const [showPDF, setShowPDF] = useState("");
+
+    const nombre = ObtenerToken()
 
     useEffect(() => {
         GetPostByUser();
@@ -116,7 +119,7 @@ export default function PagueHome() {
                 <div className="flex items-center justify-between text-gray-200">
 
                     <span className="text-sm">
-                        Bienvenido: <span className="text-purple-400 font-medium">Jorge</span>
+                        Bienvenido: <span className="text-purple-400 font-medium">{nombre?.nombres}</span>
                     </span>
 
                     <button

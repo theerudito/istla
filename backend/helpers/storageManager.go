@@ -53,7 +53,7 @@ func StorageManager(obj dto.StorageItemDTO) (int, error) {
 		_, err = obj.TX.Exec(qDelete, obj.StorageId)
 
 		if err != nil {
-			_ = InsertLogsError(obj.TX, "storage", fmt.Sprintf("error eligando el registro"))
+			_ = InsertLogsError(obj.TX, "storage", fmt.Sprintf("error eliminando el registro"))
 			return 0, err
 		}
 

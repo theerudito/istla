@@ -14,3 +14,8 @@ type UsuarioLoginDTO struct {
 	Identificacion string `json:"identificacion"`
 	Password       string `json:"password"`
 }
+
+type UsuarJWT struct {
+	UsuarioId int    `json:"id_usuario"`
+	Nombres   string `json:"nombres"`
+}

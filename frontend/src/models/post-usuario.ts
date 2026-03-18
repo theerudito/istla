@@ -3,7 +3,7 @@ export interface PostUsuarioDTO {
     post_user_id: number;
     descripcion: string;
     usuario: string;
-    usuario_id: number;
+    usuario_id: number ;
     id_storage: number;
     url: string;
     usuario_creacion: string;
@@ -15,8 +15,9 @@ export interface PostUsuarioDTO {
 export interface PostUsuario {
     post_user_id: number
     descripcion: string
-    usuario_id: number
-    file: Uint8Array | null
+    usuario_id: number | null
+    file: ArrayBuffer | null
+    fileName: string
     usuario_creacion: string
     usuario_modificacion: string
 }

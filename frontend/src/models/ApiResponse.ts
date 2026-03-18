@@ -4,3 +4,8 @@ export type ApiResponse<T> = {
     mensaje: string;
     resultado: T;
 };
+
+export type ApiResponseAcciones = {
+    codigo: number;
+    mensaje: string;
+};
