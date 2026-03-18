@@ -1,29 +1,29 @@
 
 import { useState } from "react";
+import {useAuth} from "../store/useAuth.ts";
 
 export default function PageAuth() {
-
+    const {form_register, form_login, Login, Register} = useAuth((state) => state);
     const [tab, setTab] = useState<"login" | "register">("login");
 
-    const [loginData, setLoginData] = useState({
-        identificacion: "",
-        password: ""
-    });
-
-    const [registerData, setRegisterData] = useState({
-        identificacion: "",
-        nombres: "",
-        apellidos: "",
-        email: "",
-        password: ""
-    });
-
-    const handleLogin = () => {
-        console.log("login", loginData);
+    const handleChangeInputLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        useAuth.setState((state) => ({
+            form_login: {
+                ...state.form_login,
+                [name as keyof typeof state.form_login]: value,
+            },
+        }));
     };
 
-    const handleRegister = () => {
-        console.log("register", registerData);
+    const handleChangeInputRegister = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        useAuth.setState((state) => ({
+            form_register: {
+                ...state.form_register,
+                [name as keyof typeof state.form_register]: value,
+            },
+        }));
     };
 
     return (
@@ -31,7 +31,6 @@ export default function PageAuth() {
 
             <div className="bg-gray-800 w-full max-w-md rounded-xl p-6 shadow-lg">
 
-                {/* TABS */}
                 <div className="flex mb-6 bg-gray-900 rounded-lg p-1">
 
                     <button
@@ -58,7 +57,7 @@ export default function PageAuth() {
 
                 </div>
 
-                {/* LOGIN */}
+
                 {tab === "login" && (
                     <div className="space-y-4">
 
@@ -69,10 +68,10 @@ export default function PageAuth() {
 
                             <input
                                 type="text"
-                                value={loginData.identificacion}
-                                onChange={(e) =>
-                                    setLoginData({ ...loginData, identificacion: e.target.value })
-                                }
+                                name="identificacion"
+                                placeholder="identificacion"
+                                value={form_login.identificacion}
+                                onChange={handleChangeInputLogin}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
@@ -84,16 +83,16 @@ export default function PageAuth() {
 
                             <input
                                 type="password"
-                                value={loginData.password}
-                                onChange={(e) =>
-                                    setLoginData({ ...loginData, password: e.target.value })
-                                }
+                                name="password"
+                                placeholder="password"
+                                value={form_login.password}
+                                onChange={handleChangeInputLogin}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
 
                         <button
-                            onClick={handleLogin}
+                            onClick={Login}
                             className="w-full bg-purple-500 hover:bg-purple-600 py-2 rounded-lg"
                         >
                             Iniciar sesión
@@ -102,7 +101,6 @@ export default function PageAuth() {
                     </div>
                 )}
 
-                {/* REGISTER */}
                 {tab === "register" && (
                     <div className="space-y-4">
 
@@ -112,13 +110,11 @@ export default function PageAuth() {
                             </label>
 
                             <input
-                                value={registerData.identificacion}
-                                onChange={(e) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        identificacion: e.target.value
-                                    })
-                                }
+                                type="text"
+                                name="identificacion"
+                                placeholder="identificacion"
+                                value={form_register.identificacion}
+                                onChange={handleChangeInputRegister}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
@@ -129,13 +125,11 @@ export default function PageAuth() {
                             </label>
 
                             <input
-                                value={registerData.nombres}
-                                onChange={(e) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        nombres: e.target.value
-                                    })
-                                }
+                                type="text"
+                                name="nombres"
+                                placeholder="nombres"
+                                value={form_register.nombres}
+                                onChange={handleChangeInputRegister}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
@@ -146,13 +140,11 @@ export default function PageAuth() {
                             </label>
 
                             <input
-                                value={registerData.apellidos}
-                                onChange={(e) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        apellidos: e.target.value
-                                    })
-                                }
+                                type="text"
+                                name="apellidos"
+                                placeholder="apellidos"
+                                value={form_register.apellidos}
+                                onChange={handleChangeInputRegister}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
@@ -164,13 +156,10 @@ export default function PageAuth() {
 
                             <input
                                 type="email"
-                                value={registerData.email}
-                                onChange={(e) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        email: e.target.value
-                                    })
-                                }
+                                name="email"
+                                placeholder="email"
+                                value={form_register.email}
+                                onChange={handleChangeInputRegister}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
@@ -182,19 +171,16 @@ export default function PageAuth() {
 
                             <input
                                 type="password"
-                                value={registerData.password}
-                                onChange={(e) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        password: e.target.value
-                                    })
-                                }
+                                name="password"
+                                placeholder="password"
+                                value={form_register.password}
+                                onChange={handleChangeInputRegister}
                                 className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                             />
                         </div>
 
                         <button
-                            onClick={handleRegister}
+                            onClick={Register}
                             className="w-full bg-purple-500 hover:bg-purple-600 py-2 rounded-lg"
                         >
                             Crear cuenta

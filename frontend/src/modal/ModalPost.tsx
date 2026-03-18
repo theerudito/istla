@@ -1,31 +1,60 @@
 import { useState } from "react";
 import { Upload } from "lucide-react";
+import {useModalPost} from "../store/useModal.ts";
+import {useUserPost} from "../store/usePostUser.ts";
 
-type Props = {
-    open: boolean;
-    onClose: () => void;
-    onSave: (data: { description: string; file: File | null }) => void;
-};
-
-export default function NewItemModal({ open, onClose, onSave }: Props) {
-    const [description, setDescription] = useState("");
+export default function ModalPost() {
+    const {open, closeModal} = useModalPost((state) => state);
+    const {form_post_user, SendData} = useUserPost((state) => state);
     const [file, setFile] = useState<File | null>(null);
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        const uploaded = e.dataTransfer.files[0];
-        if (uploaded) setFile(uploaded);
+    const handleChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const {name, value} = e.target;
+        useUserPost.setState((state) => ({
+            form_post_user: {
+                ...state.form_post_user,
+                [name as keyof typeof state.form_post_user]: value,
+            },
+        }));
     };
 
-    const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setFile(e.target.files[0]);
+    const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        const uploaded = e.dataTransfer.files[0];
+
+        if (uploaded) {
+            setFile(uploaded);
+
+            const fileData = await fileToUint8Array(uploaded);
+
+            useUserPost.setState((state) => ({
+                form_post_user: {
+                    ...state.form_post_user,
+                    file: fileData,
+                },
+            }));
         }
     };
 
-    const handleSave = () => {
-        onSave({ description, file });
-        onClose();
+    const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const uploaded = e.target.files[0];
+            setFile(uploaded);
+
+            const fileData = await fileToUint8Array(uploaded);
+
+            useUserPost.setState((state) => ({
+                form_post_user: {
+                    ...state.form_post_user,
+                    file: fileData,
+                },
+            }));
+        }
+    };
+
+    const fileToUint8Array = async (file: File): Promise<Uint8Array> => {
+        const buffer = await file.arrayBuffer();
+        return new Uint8Array(buffer);
     };
 
     if (!open) return null;
@@ -39,7 +68,7 @@ export default function NewItemModal({ open, onClose, onSave }: Props) {
                     Nuevo registro
                 </h2>
 
-                {/* DESCRIPCIÓN */}
+
                 <div className="mb-4">
                     <label className="text-sm text-gray-400">
                         Descripción
@@ -47,13 +76,14 @@ export default function NewItemModal({ open, onClose, onSave }: Props) {
 
                     <textarea
                         rows={3}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Descripcion"
+                        name="descripcion"
+                        value={form_post_user.descripcion}
+                        onChange={handleChangeInput}
                         className="w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg p-2 focus:outline-none focus:border-purple-500"
                     />
                 </div>
 
-                {/* DRAG & DROP */}
                 <div
                     onDrop={handleDrop}
                     onDragOver={(e) => e.preventDefault()}
@@ -90,18 +120,17 @@ export default function NewItemModal({ open, onClose, onSave }: Props) {
                     )}
                 </div>
 
-                {/* BOTONES */}
                 <div className="flex justify-end gap-3">
 
                     <button
-                        onClick={onClose}
+                        onClick={closeModal}
                         className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600"
                     >
                         Cancelar
                     </button>
 
                     <button
-                        onClick={handleSave}
+                        onClick={SendData}
                         className="px-4 py-2 rounded-lg bg-purple-500 hover:bg-purple-600"
                     >
                         Guardar

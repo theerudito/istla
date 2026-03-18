@@ -1,73 +1,35 @@
 import {Eye, Pencil, Trash2, Plus, Power} from "lucide-react";
-import NewItemModal from "../modal/NewItemModal.tsx";
-import {useState} from "react";
-
-type Item = {
-    id: number;
-    description: string;
-};
-
-const data: Item[] = [
-    { id: 1, description: "Elemento uno" },
-    { id: 2, description: "Elemento dos" },
-    { id: 3, description: "Elemento tres" },
-    { id: 4, description: "Elemento cuatro" },
-    { id: 5, description: "Elemento cinco" },
-    { id: 6, description: "Elemento seis" },
-    { id: 1, description: "Elemento uno" },
-    { id: 2, description: "Elemento dos" },
-    { id: 3, description: "Elemento tres" },
-    { id: 4, description: "Elemento cuatro" },
-    { id: 5, description: "Elemento cinco" },
-    { id: 6, description: "Elemento seis" },
-    { id: 1, description: "Elemento uno" },
-    { id: 2, description: "Elemento dos" },
-    { id: 3, description: "Elemento tres" },
-    { id: 4, description: "Elemento cuatro" },
-    { id: 5, description: "Elemento cinco" },
-    { id: 6, description: "Elemento seis" },
-    { id: 1, description: "Elemento uno" },
-    { id: 2, description: "Elemento dos" },
-    { id: 3, description: "Elemento tres" },
-    { id: 4, description: "Elemento cuatro" },
-    { id: 5, description: "Elemento cinco" },
-    { id: 6, description: "Elemento seis" },
-];
-
+import NewItemModal from "../modal/ModalPost.tsx";
+import {useEffect, useState} from "react";
+import {useUserPost} from "../store/usePostUser.ts";
+import {useAuth} from "../store/useAuth.ts";
+import {useModalPost} from "../store/useModal.ts";
 
 export default function PagueHome() {
+    const {Logout} = useAuth((state) => state);
+    const {openModal} = useModalPost((state) => state);
+    const {list_post_user, GetPostByUser, GetOne, DeletePost} = useUserPost((state) => state);
+    const [showPDF, setShowPDF] = useState("");
 
-    const [openModal, setOpenModal] = useState(false);
+    useEffect(() => {
+        GetPostByUser();
+    }, [GetPostByUser])
 
-    const handleSave = (data: any) => {
-        console.log("guardar", data);
-    };
-
-    const handleView = (item: Item) => {
-        console.log("ver", item);
-    };
-
-    const handleEdit = (item: Item) => {
-        console.log("editar", item);
-    };
-
-    const handleDelete = (item: Item) => {
-        console.log("eliminar", item);
+    const handleView = (url: string) => {
+        if (!url) return;
+        setShowPDF(url);
     };
 
     return (
         <div className="flex flex-col h-screen bg-gray-900 text-gray-200">
 
-            {/* CONTENIDO */}
             <div className="flex flex-col lg:flex-row flex-1 p-4 gap-4 overflow-hidden">
 
-                {/* COLUMNA TABLA */}
                 <div className="w-full lg:w-1/2 bg-gray-800 rounded-xl shadow flex flex-col p-4">
 
-                    {/* BOTON NUEVO */}
                     <div className="mb-4">
                         <button
-                            onClick={() => setOpenModal(true)}
+                            onClick={openModal}
                             className="flex items-center gap-2 bg-purple-500 px-4 py-2 rounded-lg hover:bg-purple-600 transition"
                         >
                             <Plus size={18}/>
@@ -75,8 +37,8 @@ export default function PagueHome() {
                         </button>
                     </div>
 
-                    {/* TABLA */}
-                    <div className="custom-scrollbar max-h-[45vh] lg:flex-1 lg:max-h-none overflow-y-auto border border-gray-700 rounded-lg">
+                    <div
+                        className="custom-scrollbar max-h-[45vh] lg:flex-1 lg:max-h-none overflow-y-auto border border-gray-700 rounded-lg">
 
                         <table className="w-full text-sm">
 
@@ -89,36 +51,36 @@ export default function PagueHome() {
                             </thead>
 
                             <tbody>
-                            {data.map((item) => (
+                            {list_post_user.map((item) => (
                                 <tr
-                                    key={item.id}
+                                    key={item.post_user_id}
                                     className="border-t border-gray-700 hover:bg-gray-700/40"
                                 >
-                                    <td className="p-3">{item.id}</td>
+                                    <td className="p-3">{item.post_user_id}</td>
 
                                     <td className="p-3">
-                                        {item.description}
+                                        {item.descripcion}
                                     </td>
 
                                     <td className="p-3">
                                         <div className="flex justify-end gap-3">
 
                                             <button
-                                                onClick={() => handleView(item)}
+                                                onClick={() => handleView(item.url)}
                                                 className="text-blue-400 hover:text-blue-300"
                                             >
                                                 <Eye size={18}/>
                                             </button>
 
                                             <button
-                                                onClick={() => handleEdit(item)}
+                                                onClick={() => GetOne(item)}
                                                 className="text-yellow-400 hover:text-yellow-300"
                                             >
                                                 <Pencil size={18}/>
                                             </button>
 
                                             <button
-                                                onClick={() => handleDelete(item)}
+                                                onClick={() => DeletePost(item.post_user_id)}
                                                 className="text-red-400 hover:text-red-300"
                                             >
                                                 <Trash2 size={18}/>
@@ -136,44 +98,39 @@ export default function PagueHome() {
                     </div>
                 </div>
 
-                {/* COLUMNA IFRAME */}
-                <div className="w-full lg:w-1/2 bg-gray-800 rounded-xl shadow border border-gray-700 overflow-hidden min-h-[300px]">
+                <div
+                    className="w-full lg:w-1/2 bg-gray-800 rounded-xl shadow border border-gray-700 overflow-hidden min-h-[300px]">
 
-                    <iframe
-                        src="https://example.com"
-                        className="w-full h-full bg-gray-900"
-                    />
+                    {showPDF && (
+                        <iframe
+                            src={showPDF}
+                            className="w-full h-full bg-gray-900"
+                        />
+                    )}
 
                 </div>
 
             </div>
 
-            <NewItemModal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                onSave={handleSave}
-            />
-
-            {/* FOOTER */}
             <footer className="bg-gray-800 border-t border-gray-700 py-3 px-4">
                 <div className="flex items-center justify-between text-gray-200">
 
-                    {/* Izquierda */}
                     <span className="text-sm">
-      Bienvenido: <span className="text-purple-400 font-medium">Jorge</span>
-            </span>
+                        Bienvenido: <span className="text-purple-400 font-medium">Jorge</span>
+                    </span>
 
-                    {/* Derecha */}
                     <button
                         className="flex items-center gap-2 text-gray-300 hover:text-red-400 transition"
-                        onClick={() => console.log("logout")}
+                        onClick={() => Logout()}
                     >
-                        <Power size={18} />
+                        <Power size={18}/>
                         <span className="text-sm hidden sm:inline">Salir</span>
                     </button>
 
                 </div>
             </footer>
+
+            <NewItemModal/>
 
         </div>
     );
