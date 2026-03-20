@@ -10,8 +10,8 @@ import (
 
 func SetupRoutes(app *fiber.App, controller *handlers.HandlersRegister) {
 	allowedOrigins := map[string]bool{
-		os.Getenv("URL_Frontend"):  true,
-		"http://192.168.3.16:1001": true,
+		os.Getenv("URL_Frontend"): true,
+		"http://localhost:5173":   true,
 	}
 
 	app.Use(cors.New(cors.Config{
