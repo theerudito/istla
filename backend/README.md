@@ -1,15 +1,16 @@
-URL_Frontend=
-ServerDB=
-PortDB=
-UserDB=
-PasswordBD=
-NameDB=
-PortServer=
-Secret_Key=
-Source_Path=
-IMAGEN=
-PDF=
-Url=
+URL_Frontend=http://localhost:5173
+ServerDB=localhost
+PortDB=5432
+UserDB=postgres
+PasswordBD=1020
+NameDB=istla
+PortServer=5002
+Secret_Key=theerudito
+Source_Path=resources
+IMAGEN=imagen
+PDF=pdf
+Url=http://127.0.0.1:5002/api/v1/
+Url=http://192.168.3.16:2002/api/v1/
 
 // INSTALAR DOCKER
 sudo apt update && sudo apt upgrade -y
