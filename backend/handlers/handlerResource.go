@@ -9,6 +9,7 @@ import (
 )
 
 func ResourceController(c *fiber.Ctx) error {
+
 	root := os.Getenv("Source_Path")
 	if root == "" {
 		root = "resources"

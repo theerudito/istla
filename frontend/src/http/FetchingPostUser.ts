@@ -6,10 +6,17 @@ import type {
   ApiResponseAcciones,
 } from "../models/ApiResponse.ts";
 
+const token = localStorage.getItem("token");
+
 export const GET_UserPost = async (id: number) => {
   try {
     const response = await axios.get<ApiResponse<PostUsuarioDTO[]>>(
       `${url_base}/post/get_by_user/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     return { success: true, data: response.data };
   } catch (error: unknown) {
@@ -29,7 +36,10 @@ export const POST_UserPost = async (
       `${url_base}/post`,
       obj,
       {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
 
@@ -57,7 +67,10 @@ export const PUT_UserPost = async (
       `${url_base}/post`,
       obj,
       {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
 
@@ -83,6 +96,11 @@ export const DELETE_UserPost = async (
   try {
     const response = await axios.delete<ApiResponseAcciones>(
       `${url_base}/post/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
 
     return {

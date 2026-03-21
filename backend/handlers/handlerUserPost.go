@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/theerudito/istla/helpers"
 	"github.com/theerudito/istla/model/entities"
 	"github.com/theerudito/istla/service"
 )
@@ -16,6 +17,13 @@ type HandlerUserPost struct {
 
 func NewHandlerPostUser(service service.IPostUsuario) *HandlerUserPost {
 	return &HandlerUserPost{Service: service}
+}
+
+func (cur *HandlerUserPost) GetRegisters(c *fiber.Ctx) error {
+
+	obj := cur.Service.Get_PostUsers()
+
+	return c.Status(obj.Codigo).JSON(obj)
 }
 
 func (cur *HandlerUserPost) GetRegisterByUser(c *fiber.Ctx) error {
@@ -148,12 +156,18 @@ func (cur *HandlerUserPost) PutRegister(c *fiber.Ctx) error {
 
 func (cur *HandlerUserPost) DeleteRegister(c *fiber.Ctx) error {
 
+	claims, err := helpers.ReadClaims(c)
+
+	if err != nil {
+		return err
+	}
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{"mensaje": "el id es invalido"})
 	}
 
-	obj := cur.Service.Delete_PostUser(uint(id))
+	obj := cur.Service.Delete_PostUser(uint(id), *claims)
 
 	return c.Status(obj.Codigo).JSON(obj)
 }

@@ -22,6 +22,66 @@ func NewRepositoriePostUser(db *sql.DB) service.IPostUsuario {
 	return &repositoriePostUser{db: db}
 }
 
+func (r *repositoriePostUser) Get_PostUsers() dto.APIRespuesta[[]*dto.PostUsuarioDTO] {
+
+	var posts []*dto.PostUsuarioDTO
+
+	rows, err := r.db.Query(`
+	SELECT
+		pu.id_post_usuario,
+		pu.descripcion,
+		pu.usuario_creacion,
+		pu.usuario_modificacion,
+		pu.fecha_creacion,
+		pu.fecha_modificacion,
+		COALESCE(u.id_usuario, 0) AS usuario_id,
+		COALESCE(u.nombres || ' ' || u.apellidos, '') AS usuario,
+		COALESCE(s.id_storage, 0) AS storage,
+		COALESCE(s.url, '') AS url
+	FROM post_usuario AS pu
+	LEFT JOIN usuarios AS u ON pu.id_usuario = u.id_usuario
+	LEFT JOIN storage AS s ON pu.id_storage = s.id_storage
+	ORDER BY 
+    	pu.id_post_usuario`)
+
+	if err != nil {
+		_ = helpers.InsertLogsError(r.db, "post user", "error ejecutando la consulta "+err.Error())
+		return dto.APIRespuesta[[]*dto.PostUsuarioDTO]{Codigo: 500, Mensaje: "error ejecutando la consulta", Resultado: []*dto.PostUsuarioDTO{}}
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		post := &dto.PostUsuarioDTO{}
+
+		err := rows.Scan(
+			&post.PostUserId,
+			&post.Descripcion,
+			&post.UsuarioCreacion,
+			&post.UsuarioModificacion,
+			&post.FechaCreacion,
+			&post.FechaModificacion,
+			&post.UsuarioId,
+			&post.Usuario,
+			&post.StorageId,
+			&post.Url)
+
+		if err != nil {
+			return dto.APIRespuesta[[]*dto.PostUsuarioDTO]{Codigo: 500, Mensaje: "error leyendo los registros", Resultado: []*dto.PostUsuarioDTO{}}
+		}
+
+		posts = append(posts, post)
+	}
+
+	if len(posts) == 0 {
+		return dto.APIRespuesta[[]*dto.PostUsuarioDTO]{Codigo: 404, Mensaje: "no se encontraron registros", Resultado: []*dto.PostUsuarioDTO{}}
+	}
+
+	return dto.APIRespuesta[[]*dto.PostUsuarioDTO]{Codigo: 200, Mensaje: "OK", Resultado: posts}
+
+}
+
 func (r repositoriePostUser) Get_PostUser_By_UserId(id uint) dto.APIRespuesta[[]*dto.PostUsuarioDTO] {
 	var posts []*dto.PostUsuarioDTO
 
@@ -263,7 +323,7 @@ func (r repositoriePostUser) Update_PostUser(obj entities.PostUsuario) *dto.APIR
 	return &dto.APIRespuestaAcciones{Codigo: 200, Mensaje: "registro actualizado correctamente"}
 }
 
-func (r repositoriePostUser) Delete_PostUser(id uint) *dto.APIRespuestaAcciones {
+func (r repositoriePostUser) Delete_PostUser(id uint, clains helpers.CustomClaims) *dto.APIRespuestaAcciones {
 
 	var (
 		err       error
@@ -302,7 +362,7 @@ func (r repositoriePostUser) Delete_PostUser(id uint) *dto.APIRespuestaAcciones 
 		return &dto.APIRespuestaAcciones{Codigo: 500, Mensaje: "error eliminando el registro"}
 	}
 
-	err = helpers.InsertLogs(r.db, "DELETE", "post usuario", int(id), "registro eliminado correctamente")
+	err = helpers.InsertLogs(r.db, "DELETE", "post usuario", clains.UserId, "registro eliminado correctamente")
 	if err != nil {
 		_ = helpers.InsertLogsError(r.db, "post usuario", "error guardando auditoria "+err.Error())
 		return &dto.APIRespuestaAcciones{Codigo: 500, Mensaje: "error guardando auditoria"}
