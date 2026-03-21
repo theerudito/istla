@@ -6,10 +6,14 @@ import type {
   ApiResponseAcciones,
 } from "../models/ApiResponse.ts";
 
-const token = localStorage.getItem("token");
-
 export const GET_UserPost = async (id: number) => {
   try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return { success: false, error: "no se encontro un token" };
+    }
+
     const response = await axios.get<ApiResponse<PostUsuarioDTO[]>>(
       `${url_base}/post/get_by_user/${id}`,
       {
@@ -32,6 +36,8 @@ export const POST_UserPost = async (
   obj: FormData,
 ): Promise<{ success: true; data: ApiResponseAcciones }> => {
   try {
+    const token = localStorage.getItem("token");
+
     const response = await axios.post<ApiResponseAcciones>(
       `${url_base}/post`,
       obj,
@@ -63,6 +69,8 @@ export const PUT_UserPost = async (
   obj: FormData,
 ): Promise<{ success: true; data: ApiResponseAcciones }> => {
   try {
+    const token = localStorage.getItem("token");
+
     const response = await axios.put<ApiResponseAcciones>(
       `${url_base}/post`,
       obj,
@@ -94,6 +102,8 @@ export const DELETE_UserPost = async (
   id: number,
 ): Promise<{ success: true; data: ApiResponseAcciones }> => {
   try {
+    const token = localStorage.getItem("token");
+
     const response = await axios.delete<ApiResponseAcciones>(
       `${url_base}/post/${id}`,
       {

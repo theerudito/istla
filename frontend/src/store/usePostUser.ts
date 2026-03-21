@@ -42,7 +42,7 @@ export const useUserPost = create<Data>()((set, get) => {
     isPDF: true,
 
     GetPostByUser: async () => {
-      const result = await GET_UserPost(Number(ObtenerToken()?.user));
+      const result = await GET_UserPost(Number(ObtenerToken()?.user_id));
 
       if (result.success && Array.isArray(result.data?.resultado)) {
         set({
@@ -108,7 +108,7 @@ export const useUserPost = create<Data>()((set, get) => {
         formData.append("usuario_creacion", form_post_user.usuario_creacion);
       }
 
-      formData.append("usuario_id", token.user.toString());
+      formData.append("usuario_id", token.user_id.toString());
 
       if (form_post_user.file) {
         const fileBlob = new Blob([form_post_user.file], {

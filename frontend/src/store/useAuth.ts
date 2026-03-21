@@ -1,87 +1,77 @@
 import { create } from "zustand";
 import { POST_Login, POST_Register } from "../http/FetchingLogin.ts";
-import type {LoginDTO, User} from "../models/usuario.ts";
-import {toast} from "sonner";
+import type { LoginDTO, User } from "../models/usuario.ts";
+import { toast } from "sonner";
 
+// Inicializadores
 const initialLogin = (): LoginDTO => ({
-    identificacion: "",
-    password: ""
+  identificacion: "",
+  password: "",
 });
 
 const initialRegister = (): User => ({
-    id_usuario: 0,
-    identificacion: "",
-    nombres: "",
-    apellidos: "",
-    email: "",
-    password: "",
-    id_perfil: 0
+  id_usuario: 0,
+  identificacion: "",
+  nombres: "",
+  apellidos: "",
+  email: "",
+  password: "",
+  id_perfil: 0,
 });
 
 type Data = {
-    form_login: LoginDTO;
-    form_register: User;
-    Login: () => void;
-    Register: () => void;
-    Logout: () => void;
-    isLogin: boolean;
-    reset: () => void;
+  form_login: LoginDTO;
+  form_register: User;
+  isLogin: boolean;
+  Login: () => Promise<void>;
+  Register: () => Promise<void>;
+  Logout: () => void;
+  reset: () => void;
 };
 
 export const useAuth = create<Data>((set, get) => ({
-    form_login: initialLogin(),
-    form_register: initialRegister(),
-    isLogin: !!localStorage.getItem("token"),
+  form_login: initialLogin(),
+  form_register: initialRegister(),
+  isLogin: !!localStorage.getItem("token"),
 
-    Login: async () => {
-        const { form_login } = get();
+  Login: async () => {
+    const { form_login } = get();
+    const result = await POST_Login(form_login);
 
-        const result = await POST_Login(form_login);
+    if (result.success && result.data.codigo === 200 && result.data.mensaje) {
+      localStorage.setItem("token", result.data.mensaje);
+      set({ isLogin: true });
+      get().reset();
+    } else {
+      toast(result.data?.mensaje || "Error en login");
+      localStorage.removeItem("token");
+      set({ isLogin: false });
+    }
+  },
 
-        if (result.success) {
-            localStorage.setItem("token", JSON.stringify(result.data?.mensaje));
-            set({ isLogin: true });
-            get().reset();
-        }
+  Register: async () => {
+    const { form_register } = get();
+    form_register.id_perfil = 1;
 
-        if (result.data.codigo != 200) {
-            toast(result.data.mensaje);
-            localStorage.removeItem("token");
-            set({ isLogin: false });
-            return;
-        }
-    },
+    const result = await POST_Register(form_register);
 
-    Register: async () => {
-        const { form_register } = get();
-        form_register.id_perfil = 1;
+    if (result.success && result.data.codigo === 200 && result.data.mensaje) {
+      localStorage.setItem("token", result.data.mensaje);
+      set({ isLogin: true });
+      get().reset();
+    } else {
+      toast(result.data?.mensaje || "Error en registro");
+      localStorage.removeItem("token");
+      set({ isLogin: false });
+    }
+  },
 
-        const result = await POST_Register(form_register);
+  Logout: () => {
+    localStorage.removeItem("token");
+    set({ isLogin: false });
+    get().reset();
+  },
 
-        if (result.success) {
-            if (result.data.codigo === 200) {
-                localStorage.setItem("token", JSON.stringify(result.data.mensaje));
-                set({ isLogin: true });
-                get().reset();
-                return result.data;
-            } else {
-                toast(result.data.mensaje);
-                localStorage.removeItem("token");
-                set({ isLogin: false });
-                return result.data;
-            }
-        } else {
-            localStorage.removeItem("token");
-            set({ isLogin: false });
-            return;
-        }
-    },
-
-    Logout: () => {
-        localStorage.removeItem("token");
-        set({ isLogin: false });
-        get().reset();
-    },
-
-    reset: () => set({ form_login: initialLogin(), form_register: initialRegister() }),
+  reset: () =>
+    set({ form_login: initialLogin(), form_register: initialRegister() }),
 }));
