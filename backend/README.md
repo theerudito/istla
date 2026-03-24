@@ -209,17 +209,17 @@ Modelo Register
 
 Modelos POST
 Tipo Contendio FormData
-"description":"HOLA",
+description : "HOLA",
 usuario_id : "1"
 file : el archivo pdf
 usuario_creacion : "JORGE"
 
-Modelos PUT<
+Modelos PUT
 Tipo Contendio FormData
 post_user_id" : "1",
-"description":"HOLA",
+description : "HOLA",
 usuario_id : "1"
-file : el archivo pdf
+file : el archivo pdf en editar puede envia o no la imagen
 usuario_modificacion : "JORGE"
 
 
