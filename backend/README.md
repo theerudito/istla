@@ -192,9 +192,28 @@ Los endpoints protegidos requieren un token JWT en el header:
 ```http
 Authorization: Bearer <tu_token>
 
+Modelo Login
+{
+    "identificacion" : "1721457495",
+    "password" : "123456"
+}
+Modelo Register
+{
+    "identificacion" : "1721457495",
+    "nombres" : "JORGE",
+    "apellidos" : "LOOR",
+    "email" : "erudito.tv@gmail.com",
+    "password" : "123456",
+    "id_perfil" : 1
+}
 
-Adicional se deja la collecion de postman para probar los endposit esta en el directorio raiz del proyecto
-donnde estan los body q debe enviar 
+Modelos POST
+<img width="879" height="242" alt="imagen" src="https://github.com/user-attachments/assets/ede8149d-be51-480c-9fdf-9a8747035c5a" />
+
+
+Modelos PUT
+<img width="884" height="278" alt="imagen" src="https://github.com/user-attachments/assets/52d9e1f3-c201-47a3-911a-2d2a1b607227" />
+
 
 
 
