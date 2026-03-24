@@ -193,7 +193,10 @@ Los endpoints protegidos requieren un token JWT en el header:
 Authorization: Bearer <tu_token>
 
 
-Adiocal se deja la collecion de postman para probar los endposit esta en el directorio raiz del proyecto
+Adicional se deja la collecion de postman para probar los endposit esta en el directorio raiz del proyecto
+donnde estan los body q debe enviar 
+
+
 
 
 
