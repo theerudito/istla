@@ -50,7 +50,6 @@ PDF=pdf
 
 # API URLs
 API_URL_LOCAL=http://127.0.0.1:5002/api/v1/
-API_URL_NETWORK=http://192.168.3.16:2002/api/v1/
 
 🐳 Instalación de Docker
 sudo apt update && sudo apt upgrade -y
