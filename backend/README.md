@@ -45,8 +45,8 @@ JWT_SECRET=theerudito
 
 # Recursos
 SOURCE_PATH=resources
-IMAGE_PATH=imagen
-PDF_PATH=pdf
+IMAGE=imagen
+PDF=pdf
 
 # API URLs
 API_URL_LOCAL=http://127.0.0.1:5002/api/v1/
